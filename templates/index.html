@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <!-- メタ情報：文字コードとレスポンシブ対応 -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- Google Fontsの読み込み：Noto Serif JP（日本語に高級感のあるフォント） -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP&display=swap" rel="stylesheet" />
+
+    <!-- Font Awesome：ユーザーアイコンやカートアイコンを使うため -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+    <title>Lizo</title>
+
+    <style>
+      /* 全要素のボックスサイズをborder-boxに統一 */
+      * {
+        box-sizing: border-box;
+      }
+
+      /* ページ全体の基本スタイル */
+      body {
+        margin: 0;
+        font-family: "Segoe UI", "Noto Sans JP", sans-serif;
+        background-color: #ffffff;
+      }
+
+      /* -------------------------------------
+         ヘッダー：ロゴ・検索・ナビゲーション含む固定上部バー
+      ------------------------------------- */
+      header {
+        display: flex;
+        flex-direction: column;
+        border-bottom: 1px solid #ddd;
+        position: sticky; /* スクロールしても上部に固定表示 */
+        top: 0;
+        background-color: #fff;
+        z-index: 1000;
+      }
+
+      /* ヘッダー上段：ロゴ＋検索バー＋アイコン */
+      .top-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 2rem;
+      }
+
+      .logo {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #111;
+        letter-spacing: 1px;
+      }
+
+      .search-icons {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+      }
+
+      .search-box {
+        padding: 0.5rem 1rem;
+        border: none;
+        background-color: #f1f1f1;
+        border-radius: 5px;
+        width: 220px;
+        font-size: 0.9rem;
+      }
+
+      .icon {
+        font-size: 1.2rem;
+        cursor: pointer;
+      }
+
+      /* ヘッダー下段：メニューリンク（8つ） */
+      .bottom-nav {
+        display: flex;
+        justify-content: center;
+        gap: 1.5rem;
+        font-size: 0.95rem;
+        padding: 0.8rem 0;
+        border-top: 1px solid #f0f0f0;
+      }
+
+      .bottom-nav a {
+        text-decoration: none;
+        color: #333;
+        padding: 0 0.5rem;
+        border-right: 1px solid #ddd;
+      }
+
+      /* -------------------------------------
+         機能説明セクション：ヘッダーの下にある青背景の説明エリア
+      ------------------------------------- */
+      .feature-banner {
+        width: 100%;
+        background: linear-gradient(135deg, #f4f8ff, #d7ebff);
+        padding: 0.5rem 2rem;
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+      }
+
+      .feature-content h2 {
+        font-size: 2rem;
+        color: #003366;
+        margin-bottom: 1rem;
+        font-weight: 600;
+        letter-spacing: 1px;
+        font-family: "Noto Serif JP"; /* 高級感のある日本語フォント */
+      }
+
+      .feature-content p {
+        font-size: 1.1rem;
+        color: #444;
+        line-height: 1.7;
+      }
+
+      /* -------------------------------------
+         メインビジュアル：ドラッグスペースと商品一覧を含む
+      ------------------------------------- */
+      .main-visual {
+        background-color: #fff;
+        padding: 3rem 2rem;
+        padding-top: 8rem; /* ヘッダーと説明分の余白を確保 */
+        text-align: center;
+      }
+
+      /* 商品一覧とドロップエリアを横並び */
+      .main-area {
+        display: flex;
+        justify-content: flex-start;
+        gap: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        align-items: flex-start;
+        flex-wrap: wrap;
+      }
+
+      /* ドラッグで商品を落とす部屋（左側） */
+      .room-area {
+        background-color: #25c2e9;
+        color: #111;
+        width: 320px;
+        height: 320px;
+        padding: 1.5rem;
+        font-size: 1rem;
+        line-height: 1.8;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        text-align: left;
+      }
+
+      /* ドロップ中のハイライト表示 */
+      .room-area.over {
+        outline: 3px dashed #fff;
+        background-color: #1ed6cd;
+      }
+
+      /* 商品グリッド（右側）：4列構成 */
+      .product-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 160px); /* 横4列 */
+        grid-template-rows: repeat(4, auto);     /* 高さは内容に応じて */
+        grid-gap: 1.5rem;
+      }
+
+      /* 各商品ボックス（グリッド内の1商品） */
+      .product-box {
+        background-color: #f4f4f4;
+        color: #111;
+        width: 160px;
+        height: 200px;
+        font-size: 0.9rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        padding: 0.5rem;
+        cursor: grab;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      /* 商品画像設定（高さ100pxで整える） */
+      .product-box img {
+        max-width: 100%;
+        height: 100px;
+        object-fit: contain;
+        margin-bottom: 0.5rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- ✅ ヘッダー全体 -->
+    <header>
+      <!-- 上段：ロゴ＋検索＋アイコン -->
+      <div class="top-header">
+        <div class="logo">Lizo</div>
+        <div class="search-icons">
+          <input type="text" class="search-box" placeholder="キーワード・カテゴリ" />
+          <i class="fas fa-heart icon"></i>
+          <i class="fas fa-user icon"></i>
+          <i class="fas fa-shopping-cart icon"></i>
+        </div>
+      </div>
+
+      <!-- 下段：機能ナビゲーションリンク -->
+      <nav class="bottom-nav">
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+        <a href="#">機能</a>
+      </nav>
+    </header>
+
+    <!-- ✅ 機能説明バナー -->
+    <div class="features-section">
+      <section class="feature-banner" id="feature-banner">
+        <div class="feature-content">
+          <h2>バーチャル空間で家具を実寸確認</h2>
+          <p>
+            気になる家具を右側からドラッグして、左側の3Dルームに配置するだけ。<br />
+            実際のサイズ・雰囲気をリアルに体験できます。
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ✅ メインエリア（部屋＋商品） -->
+    <section class="main-visual">
+      <div class="main-area">
+        <!-- 左側：ドラッグのドロップ先 -->
+        <div class="room-area" id="drop-zone">
+          <p>
+            <strong>3Dの部屋</strong><br />
+            ここにドラッグできるようにする
+          </p>
+        </div>
+
+        <!-- 右側：商品一覧（ドラッグ可能） -->
+        <div class="product-grid">
+          <!-- 商品1 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item1">
+            <img src="chair.jpg" alt="高級チェア" />
+            <p>高級チェア<br /><strong>¥25,000</strong></p>
+          </div>
+          <!-- 商品2 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item2">
+            <img src="table.jpg" alt="モダンテーブル" />
+            <p>モダンテーブル<br /><strong>¥40,000</strong></p>
+          </div>
+          <!-- 商品3 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item3">
+            <img src="shelf.jpg" alt="本棚" />
+            <p>スタイリッシュ本棚<br /><strong>¥30,000</strong></p>
+          </div>
+          <!-- 商品4 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item4">
+            <img src="sofa.jpg" alt="ソファ" />
+            <p>シンプルソファ<br /><strong>¥50,000</strong></p>
+          </div>
+          <!-- 商品5 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item5">
+            <img src="lamp.jpg" alt="デザインランプ" />
+            <p>デザインランプ<br /><strong>¥12,000</strong></p>
+          </div>
+          <!-- 商品6 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item6">
+            <img src="rug.jpg" alt="ラグマット" />
+            <p>ラグマット<br /><strong>¥9,800</strong></p>
+          </div>
+          <!-- 商品7 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item7">
+            <img src="plant.jpg" alt="観葉植物" />
+            <p>観葉植物<br /><strong>¥6,000</strong></p>
+          </div>
+          <!-- 商品8 -->
+          <div class="product-box" draggable="true" ondragstart="drag(event)" id="item8">
+            <img src="mirror.jpg" alt="壁掛けミラー" />
+            <p>壁掛けミラー<br /><strong>¥14,000</strong></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ✅ JavaScript：ドラッグ＆ドロップ処理 -->
+    <script>
+      // ドラッグ開始時にIDをデータとして設定
+      function drag(ev) {
+        ev.dataTransfer.setData("text", ev.target.id);
+      }
+
+      const dropZone = document.getElementById("drop-zone");
+
+      // ドラッグしている間、部屋をハイライト
+      dropZone.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        dropZone.classList.add("over");
+      });
+
+      // ドラッグが離れたらハイライトを外す
+      dropZone.addEventListener("dragleave", function () {
+        dropZone.classList.remove("over");
+      });
+
+      // ドロップ処理：商品を部屋にクローンして配置
+      dropZone.addEventListener("drop", function (e) {
+        e.preventDefault();
+        const data = e.dataTransfer.getData("text");
+        const draggedItem = document.getElementById(data);
+        dropZone.appendChild(draggedItem.cloneNode(true));
+        dropZone.classList.remove("over");
+      });
+    </script>
+  </body>
+</html>

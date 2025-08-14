@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ item.name }}</title>
+</head>
+<body>
+    <h1>{{ item.name }}</h1>
+    <img src="{{ url_for('static', filename='images/' ~ item.image) }}" alt="{{ item.name }}" width="300">
+    <p>価格：{{ item.price }}</p>
+    <p>説明：{{ item.desc }}</p>
+
+    <p><a href="/">← 商品一覧へ戻る</a></p>
+</body>
+</html>
